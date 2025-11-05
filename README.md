@@ -1,9 +1,6 @@
 # AlphaBrain Core
 
-AlphaBrain Core is a **production-grade AI engineering system** built on AWS and open-source technologies.  
-Its goal is to enable end-to-end learning of **AI engineering, infrastructure, orchestration, and deployment** —  
-focusing on system design over model accuracy.
-
+AlphaBrain Core is a **production-grade financial forecasting - An AI engineering system** built on AWS and open-source technologies.
 ---
 
 ## 🎯 Project Objective
@@ -50,6 +47,6 @@ Use responsibly and ethically in alignment with data-provider terms.
 ---
 
 ## 👨‍💻 Maintainer
-**You** — as the primary developer and architect of AlphaBrain Core.  
+**Achyut Kulkarni** — as the primary developer and architect of AlphaBrain Core.  
 This repository represents your journey toward staff-level AI engineering mastery.# alphabrain-core
 AI Engineering for Financial Forecasting
