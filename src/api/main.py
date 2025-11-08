@@ -23,4 +23,4 @@ def health():
         "status": "healthy",
         "service": "api",
         "timestamp": datetime.utcnow().isoformat()
-    }
+    }# Docker CI test
