@@ -39,5 +39,6 @@ override.tf.json
 **/.terraform/providers/*
 
 .env
-.env.example
-.env.*
+.env.local
+.env.dev
+.env.prod
