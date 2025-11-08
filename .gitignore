@@ -39,4 +39,5 @@ override.tf.json
 **/.terraform/providers/*
 
 .env
+.env.example
 .env.*
