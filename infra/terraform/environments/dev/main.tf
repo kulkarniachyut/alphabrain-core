@@ -21,4 +21,4 @@ resource "aws_s3_bucket_versioning" "bootstrap" {
   versioning_configuration {
     status = "Enabled"
   }
-}
+}# Trigger test
