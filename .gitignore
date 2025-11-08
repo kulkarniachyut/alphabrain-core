@@ -37,3 +37,6 @@ override.tf.json
 # Local Terraform data and providers
 **/.terraform/*
 **/.terraform/providers/*
+
+.env
+.env.*
