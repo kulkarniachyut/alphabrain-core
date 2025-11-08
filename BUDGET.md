@@ -1,6 +1,6 @@
 # AlphaBrain Core – AWS Budget & Cost Control
 
-Target: **$50/month average spend**, with alert thresholds at $40 (warning) and $50 (critical).
+Target: **$40/month average spend**, with alert thresholds at $40 (warning) and $50 (critical).
 
 ---
 
