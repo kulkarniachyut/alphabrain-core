@@ -69,6 +69,11 @@ jobs:
         run: |
           docker run -d --name worker-test alphabrain-worker:${{ github.sha }}
           sleep 10
+          docker ps -a | grep worker-test  # Check container status
+          echo "=== Container status ==="
+          docker ps -a | grep worker-test || exit 1
+          echo "=== Container inspect ==="
+          docker inspect worker-test --format='{{.State.Status}} - {{.State.ExitCode}}' || exit 1
           echo "=== Container logs ==="
           docker logs worker-test
           echo "=== Checking for 'Worker started' ==="
