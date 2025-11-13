@@ -67,7 +67,7 @@ jobs:
 
       - name: Test Worker container
         run: |
-          docker run -d --name worker-test alphabrain-worker:${{ github.sha }}
+          docker run -d --name worker-test -e PYTHONUNBUFFERED=1 alphabrain-worker:${{ github.sha }}
           sleep 10
           docker ps -a | grep worker-test  # Check container status
           echo "=== Container status ==="
