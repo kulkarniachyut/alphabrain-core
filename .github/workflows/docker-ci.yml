@@ -68,7 +68,10 @@ jobs:
       - name: Test Worker container
         run: |
           docker run -d --name worker-test alphabrain-worker:${{ github.sha }}
-          sleep 5
+          sleep 10
+          echo "=== Container logs ==="
+          docker logs worker-test
+          echo "=== Checking for 'Worker started' ==="
           docker logs worker-test | grep -q "Worker started" || exit 1
           docker stop worker-test
 
