@@ -1,6 +1,6 @@
 provider "aws" {
   region = var.aws_region
-  
+
   default_tags {
     tags = {
       project     = var.project_name
@@ -17,9 +17,9 @@ resource "aws_s3_bucket" "bootstrap" {
 
 resource "aws_s3_bucket_versioning" "bootstrap" {
   bucket = aws_s3_bucket.bootstrap.id
-  
+
   versioning_configuration {
     status = "Enabled"
   }
-}# Trigger test
+} # Trigger test
 # Terraform test

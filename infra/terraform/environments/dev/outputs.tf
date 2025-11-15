@@ -39,3 +39,20 @@ output "mlflow_db_secret_arn" {
   value       = aws_secretsmanager_secret.mlflow_db_password.arn
   sensitive   = true
 }
+
+# Data lake outputs
+output "data_lake_bucket_name" {
+  description = "Data lake S3 bucket name"
+  value       = aws_s3_bucket.data_lake.id
+}
+
+output "data_lake_bucket_arn" {
+  description = "Data lake S3 bucket ARN"
+  value       = aws_s3_bucket.data_lake.arn
+}
+
+output "airflow_aws_credentials_secret_arn" {
+  description = "ARN of Airflow AWS credentials in Secrets Manager"
+  value       = aws_secretsmanager_secret.airflow_aws_credentials.arn
+  sensitive   = true
+}
