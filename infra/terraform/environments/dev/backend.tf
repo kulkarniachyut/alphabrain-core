@@ -1,6 +1,6 @@
 terraform {
   required_version = ">= 1.5.0"
-  
+
   required_providers {
     aws = {
       source  = "hashicorp/aws"
@@ -11,7 +11,7 @@ terraform {
       version = "~> 3.5"
     }
   }
-  
+
   backend "s3" {
     bucket         = "alphabrain-core-terraform-state"
     key            = "dev/terraform.tfstate"

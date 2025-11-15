@@ -1,4 +1,3 @@
-
 services:
   api:
     build:
@@ -25,15 +24,16 @@ services:
     restart: unless-stopped
     networks:
       - alphabrain
+
   mlflow:
-    image: python:3.11-slim  # Use base Python image
+    image: python:3.11-slim
     container_name: alphabrain-mlflow
     ports:
       - "5000:5000"
     environment:
-      - AWS_DEFAULT_REGION=us-east-1
-      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}  # ADD
-      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}  # AD
+      - AWS_DEFAULT_REGION=${AWS_REGION}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
     env_file:
       - .env
     command: >
@@ -47,7 +47,84 @@ services:
       "
     restart: unless-stopped
     networks:
-      - alphabrain  
+      - alphabrain
+
+  # Step 1: Initialize DB (runs once)
+  airflow-init:
+    image: apache/airflow:2.7.3-python3.11
+    container_name: alphabrain-airflow-init
+    env_file:
+      - .env
+    environment:
+      - _AIRFLOW_DB_MIGRATE=true
+      - _AIRFLOW_WWW_USER_CREATE=true
+      - _AIRFLOW_WWW_USER_USERNAME=admin
+      - _AIRFLOW_WWW_USER_PASSWORD=admin
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./logs:/opt/airflow/logs
+      - ./plugins:/opt/airflow/plugins
+    entrypoint: /bin/bash
+    command:
+      - -c
+      - |
+        airflow db migrate
+        airflow users create --username admin --password admin --firstname Admin --lastname User --role Admin --email admin@alphabrain.ai || true
+    networks:
+      - alphabrain
+
+  # Step 2: Scheduler (depends on init)
+  airflow-scheduler:
+    image: apache/airflow:2.7.3-python3.11
+    container_name: alphabrain-airflow-scheduler
+    env_file:
+      - .env
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./logs:/opt/airflow/logs
+      - ./plugins:/opt/airflow/plugins
+      - ./requirements-airflow.txt:/requirements.txt
+    command: >
+      bash -c "pip install -r /requirements.txt && airflow scheduler"
+    restart: unless-stopped
+    networks:
+      - alphabrain
+    depends_on:
+      airflow-init:
+        condition: service_completed_successfully
+
+  # Step 3: Webserver (depends on scheduler)
+  airflow-webserver:
+    image: apache/airflow:2.7.3-python3.11
+    container_name: alphabrain-airflow-webserver
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    environment:
+      - AIRFLOW__WEBSERVER__WORKERS=2
+      - AIRFLOW__WEBSERVER__WORKER_CLASS=sync
+      - AIRFLOW__WEBSERVER__WEB_SERVER_MASTER_TIMEOUT=600
+      - AIRFLOW__WEBSERVER__WEB_SERVER_WORKER_TIMEOUT=600
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./logs:/opt/airflow/logs
+      - ./plugins:/opt/airflow/plugins
+      - ./requirements-airflow.txt:/requirements.txt 
+    command: >
+      bash -c "pip install -r /requirements.txt && airflow webserver"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 80s
+    networks:
+      - alphabrain
+    depends_on:
+      airflow-scheduler:
+        condition: service_started
 
 networks:
   alphabrain:
