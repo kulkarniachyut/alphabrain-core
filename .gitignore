@@ -42,3 +42,18 @@ override.tf.json
 .env.local
 .env.dev
 .env.prod
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Airflow logs
+logs/
+logs/*
+
+# Ignore DAG compiled files
+dags/**/__pycache__/
+dags/**/*.pyc
+
+# Git internals or system files
+*.DS_Store
